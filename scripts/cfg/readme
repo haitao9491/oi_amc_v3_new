@@ -1,0 +1,17 @@
+配置文件说明:
+1. OI_AMC_V3-base.cfg
+myself包
+
+2. OI_AMC_V3-app-init.cfg
+暂时未用
+
+3. OI_AMC_V3-app.cfg
+application包
+加载驱动以及FPGA,配置FPGA
+适用于语音采集项目, 中创全量采集，多协议(GFP,POS,PP)采集
+
+4. OI_AMC_V3-app-v1.cfg
+application包
+加载驱动以及FPGA,配置FPGA
+启动psagent
+适用于南京linkmap学习项目

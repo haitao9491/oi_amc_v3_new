@@ -1,0 +1,1137 @@
+-- extern mib
+SmartDS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+	enterprises, MODULE-IDENTITY, OBJECT-TYPE, IpAddress,
+	NOTIFICATION-TYPE, OCTET STRING, OBJECT IDENTIFIER,
+	INTEGER, TimeTicks, Counter64, Gauge32, Integer32 
+		FROM SNMPv2-SMI
+	
+	TimeStamp, RowStatus, DisplayString, MacAddress
+		FROM SNMPv2-TC;
+
+
+SmartDSMib MODULE-IDENTITY
+	LAST-UPDATED "201901230000Z"
+	ORGANIZATION "www.hlytec.com"
+	CONTACT-INFO
+		"postal: 
+		 email:	xiumei.wang@hlytec.com"
+	DESCRIPTION
+		"the top mib file of raycores"
+	REVISION
+		"201901100000Z"
+	DESCRIPTION
+		"start begin 20190123"
+	::= { enterprises 47121 }
+
+
+Smart-DS OBJECT IDENTIFIER ::= { SmartDSMib 1 }
+
+cstGroomerCfgAlarmStatInfo  OBJECT IDENTIFIER ::= { Smart-DS 2 }
+cstGroomerSwitch  OBJECT IDENTIFIER ::= { Smart-DS 3 }
+cstGroomerPMInfo  OBJECT IDENTIFIER ::= { Smart-DS 4 }
+
+		
+cstGroomerMibPortInfoCfgTable OBJECT-TYPE
+	SYNTAX	SEQUENCE OF cstGroomerMibPortInfoCfgEntry
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerCfgAlarmStatInfo 1 }
+
+cstGroomerMibPortInfoCfgEntry OBJECT-TYPE
+	SYNTAX	cstGroomerMibPortInfoCfgEntry
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	INDEX { 
+		cstGroomerMibPortInfoCfgID
+	}
+	::= { cstGroomerMibPortInfoCfgTable 1 }
+	
+cstGroomerMibPortInfoCfgEntry ::=SEQUENCE {
+	cstGroomerMibPortInfoCfgID           Integer32,
+	cstGroomerMibPortInfoCfgPI           INTEGER,
+	cstGroomerMibPortInfoCfgLC           INTEGER,
+	cstGroomerMibPortInfoCfgFF           INTEGER,
+	cstGroomerMibPortInfoCfgOFF          INTEGER,
+	cstGroomerMibPortInfoCfgMODE         INTEGER,
+	cstGroomerMibPortInfoCfgGAIN         INTEGER,
+	cstGroomerMibPortInfoCfgIMPEDANCE    INTEGER,
+	cstGroomerMibPortInfoCfgOIMPEDANCE   INTEGER
+}
+
+cstGroomerMibPortInfoCfgID OBJECT-TYPE
+	SYNTAX Integer32	
+	MAX-ACCESS read-create
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoCfgEntry 1 }
+
+cstGroomerMibPortInfoCfgPI OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS read-create
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoCfgEntry 2 }
+	
+cstGroomerMibPortInfoCfgLC OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS read-create
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoCfgEntry 3 }
+	
+cstGroomerMibPortInfoCfgFF OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS read-create
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoCfgEntry 4 }
+	
+	
+cstGroomerMibPortInfoCfgOFF OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS read-create
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoCfgEntry 5 }	
+	
+stGroomerMibPortInfoCfgMODE OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS read-create
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoCfgEntry 6 }	
+	
+cstGroomerMibPortInfoCfgGAIN OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS read-create
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoCfgEntry 7 }	
+	
+cstGroomerMibPortInfoCfgIMPEDANCE OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS read-create
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoCfgEntry 8 }	
+	
+cstGroomerMibPortInfoCfgOIMPEDANCE OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS read-create
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoCfgEntry 9 }	
+	
+	
+cstGroomerMibPortInfoAlarmTable OBJECT-TYPE
+	SYNTAX	SEQUENCE OF cstGroomerMibPortInfoAlarmEntry
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerCfgAlarmStatInfo 2 }
+
+cstGroomerMibPortInfoAlarmEntry OBJECT-TYPE
+	SYNTAX	cstGroomerMibPortInfoAlarmEntry
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	INDEX { 
+		cstGroomerMibPortInfoAlarmID
+	}
+	::= { cstGroomerMibPortInfoAlarmTable 1 }	
+
+cstGroomerMibPortInfoAlarmEntry ::=SEQUENCE {
+ cstGroomerMibPortInfoAlarmID           Integer32,
+ cstGroomerMibPortInfoAlarmLOS          INTEGER,
+ cstGroomerMibPortInfoAlarmLOF          INTEGER,
+ cstGroomerMibPortInfoAlarmAIS          INTEGER,
+ cstGroomerMibPortInfoAlarmRAI          INTEGER,
+ cstGroomerMibPortInfoAlarmCASMFLOSS    INTEGER,
+ cstGroomerMibPortInfoAlarmCRCMFLOSS    INTEGER,
+ cstGroomerMibPortInfoAlarmCASMFRAI     INTEGER,
+ cstGroomerMibPortInfoAlarmCODE         Counter32,
+ cstGroomerMibPortInfoAlarmCRC          Counter32,
+ cstGroomerMibPortInfoAlarmFAS          Counter32,
+ cstGroomerMibPortInfoAlarmEBIT         Counter32,
+ cstGroomerMibPortInfoAlarmBBC          Counter32,
+ cstGroomerMibPortInfoAlarmBEC          Counter32,
+ cstGroomerMibPortInfoAlarmBERTSync     INTEGER
+}                                       
+                                        
+cstGroomerMibPortInfoAlarmID OBJECT-TYPE   
+	SYNTAX Integer32	               
+	MAX-ACCESS read-only                   
+	STATUS mandatory                       
+	DESCRIPTION                            
+		""                                   
+	::= { cstGroomerMibPortInfoAlarmEntry 1 }
+
+cstGroomerMibPortInfoAlarmLOS OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoAlarmEntry 2 } 
+
+
+cstGroomerMibPortInfoAlarmLOF OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoAlarmEntry 3 } 
+
+
+cstGroomerMibPortInfoAlarmAIS OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoAlarmEntry 4 } 
+
+
+cstGroomerMibPortInfoAlarmRAI OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoAlarmEntry 5 } 
+
+cstGroomerMibPortInfoAlarmCASMFLOSS OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoAlarmEntry 6 } 
+
+cstGroomerMibPortInfoAlarmCRCMFLOSS OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoAlarmEntry 7 } 
+
+
+cstGroomerMibPortInfoAlarmCASMFRAI OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoAlarmEntry 8 } 
+
+
+cstGroomerMibPortInfoAlarmCODE OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoAlarmEntry 9 } 
+
+
+cstGroomerMibPortInfoAlarmCRC OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoAlarmEntry 10 } 
+
+
+
+cstGroomerMibPortInfoAlarmFAS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoAlarmEntry 11 } 
+
+
+cstGroomerMibPortInfoAlarmEBIT OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoAlarmEntry 12 } 
+
+
+cstGroomerMibPortInfoAlarmBBC OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoAlarmEntry 13 } 
+
+cstGroomerMibPortInfoAlarmBEC OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoAlarmEntry 14 } 
+
+cstGroomerMibPortInfoAlarmBERTSync OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoAlarmEntry 15 } 
+
+
+
+cstGroomerMibPortInfoStatTable OBJECT-TYPE
+	SYNTAX	SEQUENCE OF cstGroomerMibPortInfoStatEntry
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerCfgAlarmStatInfo 3 }
+
+cstGroomerMibPortInfoStatEntry OBJECT-TYPE
+	SYNTAX	cstGroomerMibPortInfoStatEntry
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	INDEX { 
+		cstGroomerMibPortInfoStatID
+	}
+	::= { cstGroomerMibPortInfoStatTable 1 }	
+
+cstGroomerMibPortInfoStatEntry ::=SEQUENCE {
+ cstGroomerMibPortInfoStatID           Integer32,
+ cstGroomerMibPortInfoAlarmLOS         INTEGER,
+ cstGroomerMibPortInfoAlarmLOF         INTEGER£¬ 
+ cstGroomerMibPortInfoStatRSL          INTEGER,
+ cstGroomerMibPortInfoStatOEQ          INTEGER,
+ cstGroomerMibPortInfoStatUEQ          INTEGER,
+ cstGroomerMibPortInfoStatJALT         INTEGER,
+ cstGroomerMibPortInfoStatRESF         INTEGER,
+ cstGroomerMibPortInfoStatRESEM        INTEGER,
+ cstGroomerMibPortInfoStatRSLIP        INTEGER,
+ cstGroomerMibPortInfoStatTOC          INTEGER,
+ cstGroomerMibPortInfoStatTSC          INTEGER
+}                                       
+
+
+cstGroomerMibPortInfoStatID OBJECT-TYPE   
+	SYNTAX Integer32	               
+	MAX-ACCESS read-only                   
+	STATUS mandatory                       
+	DESCRIPTION                            
+		""                                   
+	::= { cstGroomerMibPortInfoStatEntry 1 }
+
+cstGroomerMibPortInfoAlarmLOS OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoStatEntry 2 } 
+
+
+cstGroomerMibPortInfoAlarmLOF OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoStatEntry 3 } 
+
+
+cstGroomerMibPortInfoStatRSL OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoStatEntry 4 } 
+
+
+
+cstGroomerMibPortInfoStatOEQ OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoStatEntry 5 } 
+
+cstGroomerMibPortInfoStatUEQ OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoStatEntry 6 } 
+
+cstGroomerMibPortInfoStatJALT OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoStatEntry 7 } 
+
+
+cstGroomerMibPortInfoStatRESF OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoStatEntry 8 } 
+
+
+cstGroomerMibPortInfoStatRESEM OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoStatEntry 9 } 
+
+
+cstGroomerMibPortInfoStatRSLIP OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoStatEntry 10 } 
+
+
+
+cstGroomerMibPortInfoStatTOC OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoStatEntry 11 } 
+
+
+cstGroomerMibPortInfoStatTSC OBJECT-TYPE
+	SYNTAX	CINTEGER
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPortInfoStatEntry 12 }
+
+
+
+cstGroomerMibSwitchTable OBJECT-TYPE
+	SYNTAX	SEQUENCE OF cstGroomerMibSwitchEntry
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerSwitch 1 }
+
+cstGroomerMibSwitchEntry OBJECT-TYPE
+	SYNTAX	cstGroomerMibSwitchEntry
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	INDEX { 
+		cstGroomerMibSwitchEntrySeq
+	}
+	::= { cstGroomerMibSwitchTable 1 }	
+
+cstGroomerMibSwitchEntry ::=SEQUENCE {
+ cstGroomerMibSwitchEntrySeq           Integer32,
+ cstGroomerMibSwitchEntryOPort         INTEGER,
+ cstGroomerMibSwitchEntryOTimeslot     INTEGER£¬ 
+ cstGroomerMibSwitchEntryIPort         INTEGER,
+ cstGroomerMibSwitchEntryITimeslot     INTEGER,
+}                                       
+
+
+cstGroomerMibSwitchEntrySeq OBJECT-TYPE   
+	SYNTAX Integer32	               
+	MAX-ACCESS read-only                   
+	STATUS mandatory                       
+	DESCRIPTION                            
+		""                                   
+	::= { cstGroomerMibSwitchEntry 1 }
+
+cstGroomerMibSwitchEntryOPort OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibSwitchEntry 2 } 
+
+
+cstGroomerMibSwitchEntryOTimeslot OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibSwitchEntry 3 } 
+
+
+cstGroomerMibSwitchEntryIPort OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibSwitchEntry 4 } 
+
+
+
+cstGroomerMibSwitchEntryITimeslot OBJECT-TYPE
+	SYNTAX	INTEGER
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibSwitchEntry 5 }
+
+
+cstGroomerMibPMG821Table OBJECT-TYPE
+	SYNTAX	SEQUENCE OF cstGroomerMibPMG821Entry
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerPMInfo 1 }
+
+cstGroomerMibPMG821Entry OBJECT-TYPE
+	SYNTAX	cstGroomerMibPMG821Entry
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	INDEX { 
+		cstGroomerMibPortInfoAlarmID
+	}
+	::= { cstGroomerMibPMG821Table 1 }	
+
+cstGroomerMibPMG821Entry ::=SEQUENCE {
+ cstGroomerMibPMG821ID           Integer32,
+ cstGroomerMibPMG821FasTS        Counter32,
+ cstGroomerMibPMG821FasAS        Counter32,
+ cstGroomerMibPMG821FasEFS       Counter32,
+ cstGroomerMibPMG821FasES        Counter32,
+ cstGroomerMibPMG821FasSES       Counter32,
+ cstGroomerMibPMG821FasUAS       Counter32,
+ cstGroomerMibPMG821CodeTS       Counter32,
+ cstGroomerMibPMG821CodeAS       Counter32,
+ cstGroomerMibPMG821CodeEFS      Counter32,
+ cstGroomerMibPMG821CodeES       Counter32,
+ cstGroomerMibPMG821CodeSES      Counter32,
+ cstGroomerMibPMG821CodeUAS      Counter32,
+ cstGroomerMibPMG821Crc4TS       Counter32,
+ cstGroomerMibPMG821Crc4AS       Counter32,
+ cstGroomerMibPMG821Crc4EFS      Counter32,
+ cstGroomerMibPMG821Crc4ES       Counter32,
+ cstGroomerMibPMG821Crc4SES      Counter32,
+ cstGroomerMibPMG821Crc4UAS      Counter32,
+ cstGroomerMibPMG821EbitTS       Counter32,
+ cstGroomerMibPMG821EbitAS       Counter32,
+ cstGroomerMibPMG821EbitEFS      Counter32,
+ cstGroomerMibPMG821EbitES       Counter32,
+ cstGroomerMibPMG821EbitSES      Counter32,
+ cstGroomerMibPMG821EbitUAS      Counter32
+}                                       
+                                        
+cstGroomerMibPMG821ID OBJECT-TYPE   
+	SYNTAX Integer32	               
+	MAX-ACCESS read-only                   
+	STATUS mandatory                       
+	DESCRIPTION                            
+		""                                   
+	::= { cstGroomerMibPMG821Entry 1 }
+
+cstGroomerMibPMG821FasTS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG821Entry 2 } 
+
+cstGroomerMibPMG821FasAS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG821Entry 3 }
+
+cstGroomerMibPMG821FasEFS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG821Entry 4 }
+
+cstGroomerMibPMG821FasES OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG821Entry 5 }
+
+cstGroomerMibPMG821FasSES OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG821Entry 6 }
+
+cstGroomerMibPMG821FasUAS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG821Entry 7 }
+
+cstGroomerMibPMG821CodeTS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG821Entry 8 }
+
+cstGroomerMibPMG821CodeAS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG821Entry 9 }
+
+cstGroomerMibPMG821CodeEFS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG821Entry 10 }
+
+cstGroomerMibPMG821CodeES OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG821Entry 11 }
+
+cstGroomerMibPMG821CodeSES OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG821Entry 12 }
+
+cstGroomerMibPMG821CodeUAS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG821Entry 13 }
+
+cstGroomerMibPMG821Crc4TS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG821Entry 14 } 
+
+cstGroomerMibPMG821Crc4AS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG821Entry 15 } 
+
+cstGroomerMibPMG821Crc4EFS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG821Entry 16 } 
+
+cstGroomerMibPMG821Crc4ES OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG821Entry 17 } 
+
+cstGroomerMibPMG821Crc4SES OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG821Entry 18 } 
+
+cstGroomerMibPMG821Crc4UAS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG821Entry 19 } 
+
+cstGroomerMibPMG821EbitTS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG821Entry 20 } 
+
+cstGroomerMibPMG821EbitAS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG821Entry 21 } 
+
+cstGroomerMibPMG821EbitEFS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG821Entry 22 } 
+
+cstGroomerMibPMG821EbitES OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG821Entry 23 } 
+
+
+cstGroomerMibPMG821EbitSES OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG821Entry 24 } 
+
+cstGroomerMibPMG821EbitUAS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG821Entry 25 } 
+
+
+cstGroomerMibPMG826Table OBJECT-TYPE
+	SYNTAX	SEQUENCE OF cstGroomerMibPMG826Entry
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerPMInfo 2 }
+
+cstGroomerMibPMG826Entry OBJECT-TYPE
+	SYNTAX	cstGroomerMibPMG826Entry
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	INDEX { 
+		cstGroomerMibPMG826ID
+	}
+	::= { cstGroomerMibPMG826Table 1 }
+
+cstGroomerMibPMG826Entry ::=SEQUENCE {
+ cstGroomerMibPMG826ID       Integer32,
+ cstGroomerMibPMG826NearTS   Counter32,
+ cstGroomerMibPMG826NearAS   Counter32,
+ cstGroomerMibPMG826NearEFS  Counter32,
+ cstGroomerMibPMG826NearES   Counter32,
+ cstGroomerMibPMG826NearSES  Counter32,
+ cstGroomerMibPMG826NearUAS  Counter32,
+ cstGroomerMibPMG826NearEB   Counter32,
+ cstGroomerMibPMG826NearBBE  Counter32,
+ cstGroomerMibPMG826FarTS    Counter32,
+ cstGroomerMibPMG826FarAS    Counter32,
+ cstGroomerMibPMG826FarEFS   Counter32,
+ cstGroomerMibPMG826FarES    Counter32,
+ cstGroomerMibPMG826FarSES   Counter32,
+ cstGroomerMibPMG826FarUAS   Counter32,
+ cstGroomerMibPMG826FarEB    Counter32,
+ cstGroomerMibPMG826FarBBE   Counter32
+}
+
+cstGroomerMibPMG826ID OBJECT-TYPE   
+	SYNTAX Integer32	               
+	MAX-ACCESS read-only                   
+	STATUS mandatory                       
+	DESCRIPTION                            
+		""                                   
+	::= { cstGroomerMibPMG826Entry 1 }
+
+cstGroomerMibPMG826NearTS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG826Entry 2 } 
+
+cstGroomerMibPMG826NearAS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG826Entry 3 }
+
+cstGroomerMibPMG826NearEFS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG826Entry 4 }
+
+cstGroomerMibPMG826NearES OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG826Entry 5 }
+
+cstGroomerMibPMG826NearSES OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG826Entry 6 }
+
+cstGroomerMibPMG826NearUAS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG826Entry 7 }
+
+cstGroomerMibPMG826NearEB OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG826Entry 8 }
+
+cstGroomerMibPMG826NearBBE OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG826Entry 9 }
+
+cstGroomerMibPMG826FarTS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG826Entry 10 }
+
+cstGroomerMibPMG826FarAS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG826Entry 11 }
+
+cstGroomerMibPMG826FarEFS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG826Entry 12 }
+
+cstGroomerMibPMG826FarES OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG826Entry 13 }
+
+cstGroomerMibPMG826FarSES OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG826Entry 14 } 
+
+cstGroomerMibPMG826FarUAS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG826Entry 15 } 
+
+cstGroomerMibPMG826FarEB OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG826Entry 16 } 
+
+cstGroomerMibPMG826FarBBE OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMG826Entry 17 }
+
+
+cstGroomerMibPMM2100Table OBJECT-TYPE
+	SYNTAX	SEQUENCE OF cstGroomerMibPMM2100Entry
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerPMInfo 3 }
+
+cstGroomerMibPMM2100Entry OBJECT-TYPE
+	SYNTAX	cstGroomerMibPMM2100Entry
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	INDEX { 
+		cstGroomerMibPMM2100ID
+	}
+	::= { cstGroomerMibPMM2100Table 1 }
+
+cstGroomerMibPMM2100Entry ::=SEQUENCE {
+ cstGroomerMibPMM2100ID       Integer32,
+ stGroomerMibPMM2100NearTS    Counter32,
+ stGroomerMibPMM2100NearAS    Counter32,
+ stGroomerMibPMM2100NearEFS   Counter32,
+ stGroomerMibPMM2100NearES    Counter32,
+ stGroomerMibPMM2100NearSES   Counter32,
+ stGroomerMibPMM2100NearUAS   Counter32,
+ stGroomerMibPMM2100FarTS     Counter32,
+ stGroomerMibPMM2100FarAS     Counter32,
+ stGroomerMibPMM2100FarEFS    Counter32,
+ stGroomerMibPMM2100FarES     Counter32,
+ stGroomerMibPMM2100FarSES    Counter32,
+ stGroomerMibPMM2100FarUAS    Counter32
+}
+
+cstGroomerMibPMM2100ID OBJECT-TYPE   
+	SYNTAX Integer32	               
+	MAX-ACCESS read-only                   
+	STATUS mandatory                       
+	DESCRIPTION                            
+		""                                   
+	::= { cstGroomerMibPMM2100Entry 1 }
+
+cstGroomerMibPMM2100NearTS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMM2100Entry 2 } 
+
+cstGroomerMibPMM2100NearAS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMM2100Entry 3 }
+
+cstGroomerMibPMM2100NearEFS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMM2100Entry 4 }
+
+cstGroomerMibPMM2100NearES OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMM2100Entry 5 }
+
+cstGroomerMibPMM2100NearSES OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMM2100Entry 6 }
+
+cstGroomerMibPMM2100NearUAS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMM2100Entry 7 }
+
+cstGroomerMibPMM2100FarTS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMM2100Entry 8 }
+
+cstGroomerMibPMM2100FarAS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMM2100Entry 9 }
+
+cstGroomerMibPMM2100FarEFS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMM2100Entry 10 }
+
+cstGroomerMibPMM2100FarES OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMM2100Entry 11 }
+
+cstGroomerMibPMM2100FarSES OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMM2100Entry 12 }
+
+cstGroomerMibPMM2100FarUAS OBJECT-TYPE
+	SYNTAX	Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { cstGroomerMibPMM2100Entry 13 }
+
+
+cstGroomerTrap OBJECT IDENTIFIER ::= { Smart-DS 1 }
+
+traplocation OBJECT IDENTIFIER ::= { cstGroomerTrap 1 }
+trapstatus OBJECT IDENTIFIER ::= { cstGroomerTrap 2 }
+
+traplos NOTIFICATION-TYPE
+	STATUS	current
+	DESCRIPTION
+		""
+	OBJECTS {
+		traplocation,
+		trapstatus	
+		}
+	::= { cstGroomerTrap 10 }
+
+trapais NOTIFICATION-TYPE
+	STATUS	current
+	DESCRIPTION
+		""
+	OBJECTS {
+		traplocation,
+		trapstatus	
+		}
+	::= { cstGroomerTrap 11 }
+
+traplof NOTIFICATION-TYPE
+	STATUS	current
+	DESCRIPTION
+		""
+	OBJECTS {
+		traplocation,
+		trapstatus	
+		}
+	::= { cstGroomerTrap 12 }
+
+traprai NOTIFICATION-TYPE
+	STATUS	current
+	DESCRIPTION
+		""
+	OBJECTS {
+		traplocation,
+		trapstatus	
+		}
+	::= { cstGroomerTrap 13 }
+
+
+END

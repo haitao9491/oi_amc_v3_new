@@ -1,0 +1,664 @@
+-- extern mib
+HLYT-ATCA-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+	enterprises, MODULE-IDENTITY, OBJECT-TYPE, IpAddress,
+	NOTIFICATION-TYPE, OCTET STRING, OBJECT IDENTIFIER,
+	INTEGER, TimeTicks, Counter64, Gauge32, Integer32 
+		FROM SNMPv2-SMI
+	
+	TimeStamp, RowStatus, DisplayString, MacAddress
+		FROM SNMPv2-TC;
+
+
+hlytec MODULE-IDENTITY
+	LAST-UPDATED "201901210000Z"
+	ORGANIZATION "www.hlytec.com"
+	CONTACT-INFO
+		"postal: 
+		 email:	xiumei.wang@hlytec.com"
+	DESCRIPTION
+		"the top mib file of hlytec"
+	REVISION
+		"201901210000Z"
+	DESCRIPTION
+		"start begin 20190121"
+	::= { enterprises 8990 }
+
+
+platform-atca OBJECT IDENTIFIER ::= { hlytec 1 }
+
+platform-info   OBJECT IDENTIFIER ::= { platform-atca 1 }
+boards-info-tbl OBJECT IDENTIFIER ::= { platform-atca 2 }
+e1-phy-module   OBJECT IDENTIFIER ::= { platform-atca 3 }
+switch-module   OBJECT IDENTIFIER ::= { platform-atca 5 }
+
+
+pltDevID OBJECT-TYPE
+	SYNTAX Counter64
+	MAX-ACCESS read-only 
+	STATUS mandatory
+	DESCRIPTION
+		"platform device identifier, 0x0000534e49504552!"
+	::= { platform-info 1 }
+
+pltDevName OBJECT-TYPE
+	SYNTAX DisplayString (SIZE (0..128))
+	MAX-ACCESS read-only 
+	STATUS mandatory
+	DESCRIPTION
+		"ATCA"
+	::= { platform-info 2 }
+
+pltDevDscr OBJECT-TYPE
+	SYNTAX DisplayString (SIZE (0..1024))
+	MAX-ACCESS read-only 
+	STATUS mandatory
+	DESCRIPTION
+		"ATCA platform device description, please reference to the user operation
+		manual"
+	::= { platform-info 3 }
+
+pltDevContact OBJECT-TYPE
+	SYNTAX DisplayString (SIZE (0..256)) 
+	MAX-ACCESS read-only 
+	STATUS mandatory
+	DESCRIPTION
+		"you'll run into issues when you opterate this platform, please
+		contact the relvant personnel."
+	::= { platform-info 4 }
+
+pltDevPlatformType OBJECT-TYPE
+	SYNTAX INTEGER {
+		ATCA(1),
+		MicroTCA(2),
+		other(3)
+	} 
+	MAX-ACCESS read-only 
+	STATUS mandatory
+	DESCRIPTION
+		""
+	DEFVAL { ATCA }
+	::= { platform-info 5 }
+
+pltDevShelfType OBJECT-TYPE
+	SYNTAX INTEGER {
+		3U-2slot(1),
+		4U-4slot(2),
+		6U-6slot(3),
+	} 
+	MAX-ACCESS read-only 
+	STATUS mandatory
+	DESCRIPTION
+		"this cann't get from shelf, later implement"
+	DEFVAL { 6U-6slot }
+	::= { platform-info 6 }
+
+pltDevSnmpSoftwareVer OBJECT-TYPE
+	SYNTAX DisplayString (SIZE (0..64))
+	MAX-ACCESS read-only 
+	STATUS mandatory
+	DESCRIPTION
+		"snmp Version 5.8"
+	::= { platform-info 7 }
+
+boardsInfoTable OBJECT-TYPE
+	SYNTAX	SEQUENCE OF boardsInfoEntry
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { boards-info-tbl 1 }
+
+boardsInfoEntry OBJECT-TYPE
+	SYNTAX	boardsInfoEntry
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	INDEX { 
+		boardRack,
+		boardShelf,
+		boardSlot,
+		boardSubSlot
+	}
+	::= { boardsInfoTable 1 }
+
+boardsInfoEntry ::=SEQUENCE {
+	boardRack      Integer32,
+	boardShelf     Integer32,
+	boardSlot      Integer32,
+	boardSubSlot   Integer32,
+	boardType      INTEGER,
+	boardStat      INTEGER
+}
+
+
+boardRack OBJECT-TYPE
+	SYNTAX Integer32(0..7)	
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"rack start number 0"
+	::= { boardsInfoEntry 1 }
+
+boardShelf OBJECT-TYPE
+	SYNTAX Integer32(0..7)	
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"shelf start number 0"
+	::= { boardsInfoEntry 2 }
+
+boardSlot OBJECT-TYPE
+	SYNTAX	Integer32(1..15)
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"slot start number 1"
+	::= { boardsInfoEntry 3 }
+
+boardSubSlot OBJECT-TYPE
+	SYNTAX	Integer32(0..4)
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"subslot number, if no subslot, this oid value is 0"
+	::= { boardsInfoEntry 4 }
+
+boardType OBJECT-TYPE
+	SYNTAX	INTEGER {
+			UNKNOWN(0),
+			EIPBv2 (1),
+			MPCBv3 (2),
+		}
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	DEFVAL { UNKNOWN }
+	::= { boardsInfoEntry 5 }
+
+boardStat OBJECT-TYPE
+	SYNTAX	INTEGER {
+			INACTIVE(0),
+			ACTIVE(1)
+		}
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { boardsInfoEntry 6 }
+
+
+e1PhyMibPortInfoAlarmTable OBJECT-TYPE
+	SYNTAX SEQUENCE OF e1PhyMibPortInfoAlarmTableEntry
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"E1 physical layer Alarm table"
+	::= { e1-phy-module 1 }
+
+e1PhyMibPortInfoAlarmTableEntry OBJECT-TYPE
+	SYNTAX  e1PhyMibPortInfoAlarmTableEntry
+	MAX-ACCESS read-only 
+	STATUS mandatory
+	DESCRIPTION
+		"E1 Alarm table entry"
+	INDEX { 
+		e1PhyMibPortInfoAlarmTablePosition,
+		e1PhyMibPortInfoAlarmTablePort,
+		e1PhyMibPortInfoAlarmTableE1Port 
+	}
+	::= { e1PhyMibPortInfoAlarmTable 1 }
+
+e1PhyMibPortInfoAlarmTableEntry	::= SEQUENCE {
+	e1PhyMibPortInfoAlarmTablePosition  IpAddress,
+	e1PhyMibPortInfoAlarmTablePort      INTEGER,
+	e1PhyMibPortInfoAlarmTableE1Port    INTEGER,
+	e1PhyMibPortInfoAlarmTableLOS       INTEGER,
+	e1PhyMibPortInfoAlarmTableLOF       INTEGER,
+	e1PhyMibPortInfoAlarmTableAIS       INTEGER,
+	e1PhyMibPortInfoAlarmTableRAI       INTEGER,
+	e1PhyMibPortInfoAlarmTableCASMFLOSS INTEGER,
+	e1PhyMibPortInfoAlarmTableCRCMFLOSS INTEGER,
+	e1PhyMibPortInfoAlarmTableCASMFRAI  INTEGER,
+	e1PhyMibPortInfoAlarmTableOEQ       INTEGER,
+	e1PhyMibPortInfoAlarmTableUEQ       INTEGER,
+	e1PhyMibPortInfoAlarmTableJALT      INTEGER,
+	e1PhyMibPortInfoAlarmTableRESF      INTEGER,
+	e1PhyMibPortInfoAlarmTableRESEM     INTEGER,
+	e1PhyMibPortInfoAlarmTableRSLIP     INTEGER,
+	e1PhyMibPortInfoAlarmTableRSL       INTEGER,
+	e1PhyMibPortInfoAlarmTableTOC       INTEGER,
+	e1PhyMibPortInfoAlarmTableTSC       INTEGER
+	e1PhyMibPortInfoAlarmTableCODE      Counter32,
+	e1PhyMibPortInfoAlarmTableCRC       Counter32,
+	e1PhyMibPortInfoAlarmTableFAS       Counter32,
+	e1PhyMibPortInfoAlarmTableEBIT      Counter32,
+}
+	
+e1PhyMibPortInfoAlarmTablePosition OBJECT-TYPE
+	SYNTAX  IpAddress
+	MAX-ACCESS read-only 
+	STATUS mandatory
+	DESCRIPTION
+		"stands for the board position address, this oid contain of rack(1-3),
+		shelf(1-8), slot(1-16), subslot(0-8), display is rack.shel.slot.subslot"
+	::= { e1PhyMibPortInfoAlarmTableEntry 1 }
+
+e1PhyMibPortInfoAlarmTablePort OBJECT-TYPE
+	SYNTAX  INTEGER(1..8)
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"the port number of E1 board, AMC_E1 has one port, EIPB have 8 ports."
+	::= { e1PhyMibPortInfoAlarmTableEntry 2 }
+
+e1PhyMibPortInfoAlarmTableE1Port OBJECT-TYPE
+	SYNTAX  INTEGER(1..16)
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"now one port have 16-port framer for E1"
+	::= { e1PhyMibPortInfoAlarmTableEntry 3 }
+
+e1PhyMibPortInfoAlarmTableLOS OBJECT-TYPE
+	SYNTAX  INTEGER(0..1)
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { e1PhyMibPortInfoAlarmTableEntry 4 }
+
+e1PhyMibPortInfoAlarmTableLOF OBJECT-TYPE
+	SYNTAX  INTEGER(0..1)
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { e1PhyMibPortInfoAlarmTableEntry 5 }
+	
+e1PhyMibPortInfoAlarmTableAIS OBJECT-TYPE
+	SYNTAX  INTEGER(0..1)
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { e1PhyMibPortInfoAlarmTableEntry 6 }
+
+e1PhyMibPortInfoAlarmTableRAI OBJECT-TYPE
+	SYNTAX  INTEGER(0..1)
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { e1PhyMibPortInfoAlarmTableEntry 7 }
+
+e1PhyMibPortInfoAlarmTableCASMFLOSS OBJECT-TYPE
+	SYNTAX  INTEGER(0..1)
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { e1PhyMibPortInfoAlarmTableEntry 8 }
+
+e1PhyMibPortInfoAlarmTableCRCMFLOSS OBJECT-TYPE
+	SYNTAX  INTEGER(0..1)
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { e1PhyMibPortInfoAlarmTableEntry 9 }
+
+e1PhyMibPortInfoAlarmTableCASMFRAI OBJECT-TYPE
+	SYNTAX  INTEGER(0..1)
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { e1PhyMibPortInfoAlarmTableEntry 10 }
+
+e1PhyMibPortInfoAlarmTableOEQ OBJECT-TYPE
+	SYNTAX  INTEGER(0..1)
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { e1PhyMibPortInfoAlarmTableEntry 11 }
+
+e1PhyMibPortInfoAlarmTableUEQ OBJECT-TYPE
+	SYNTAX  INTEGER(0..1)
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { e1PhyMibPortInfoAlarmTableEntry 12 }
+
+e1PhyMibPortInfoAlarmTableJALT OBJECT-TYPE
+	SYNTAX  INTEGER(0..1)
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { e1PhyMibPortInfoAlarmTableEntry 13 }
+
+e1PhyMibPortInfoAlarmTableRESF OBJECT-TYPE
+	SYNTAX  INTEGER(0..1)
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { e1PhyMibPortInfoAlarmTableEntry 14 }
+
+e1PhyMibPortInfoAlarmTableRESEM OBJECT-TYPE
+	SYNTAX  INTEGER(0..1)
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { e1PhyMibPortInfoAlarmTableEntry 15 }
+
+e1PhyMibPortInfoAlarmTableRSLIP OBJECT-TYPE
+	SYNTAX  INTEGER(0..1)
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { e1PhyMibPortInfoAlarmTableEntry 16 }
+
+e1PhyMibPortInfoAlarmTableRSL OBJECT-TYPE
+	SYNTAX  INTEGER(0..65535)
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { e1PhyMibPortInfoAlarmTableEntry 17 }
+
+e1PhyMibPortInfoAlarmTableTOC OBJECT-TYPE
+	SYNTAX  INTEGER(0..1)
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { e1PhyMibPortInfoAlarmTableEntry 18 }
+
+e1PhyMibPortInfoAlarmTableTSC OBJECT-TYPE
+	SYNTAX  INTEGER(0..1)
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { e1PhyMibPortInfoAlarmTableEntry 19 }
+
+e1PhyMibPortInfoAlarmTableCODE OBJECT-TYPE
+	SYNTAX  Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { e1PhyMibPortInfoAlarmTableEntry 20 }
+
+e1PhyMibPortInfoAlarmTableCRC OBJECT-TYPE
+	SYNTAX  Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { e1PhyMibPortInfoAlarmTableEntry 21 }
+
+e1PhyMibPortInfoAlarmTableFAS OBJECT-TYPE
+	SYNTAX  Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { e1PhyMibPortInfoAlarmTableEntry 22 }
+
+e1PhyMibPortInfoAlarmTableEBIT OBJECT-TYPE
+	SYNTAX  Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { e1PhyMibPortInfoAlarmTableEntry 23 }
+
+
+e1PhyMibPortInfoStatTable OBJECT-TYPE
+	SYNTAX SEQUENCE OF e1PhyMibPortInfoStatTableEntry
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"E1 physical layer statistic table"
+	::= { e1-phy-module 2 }
+
+e1PhyMibPortInfoStatTableEntry OBJECT-TYPE
+	SYNTAX  e1PhyMibPortInfoStatTableEntry
+	MAX-ACCESS read-only 
+	STATUS mandatory
+	DESCRIPTION
+		"E1 statistics table entry"
+	INDEX { 
+		e1PhyMibPortInfoStatTablePosition,
+		e1PhyMibPortInfoStatTablePortGroup
+	}
+	::= { e1PhyMibPortInfoStatTable 1 }
+
+e1PhyMibPortInfoStatTableEntry	::= SEQUENCE {
+	e1PhyMibPortInfoStatTablePosition     IpAddress,
+	e1PhyMibPortInfoStatTablePortGroup    INTEGER,
+	e1PhyMibPortInfoStatTableSIG64KCHCNT  Counter32,
+	e1PhyMibPortInfoStatTableSIG64KFRCNT  Counter32,
+	e1PhyMibPortInfoStatTableSIG2MCHCNT   Counter32,
+	e1PhyMibPortInfoStatTableSIG2MFRCNT   Counter32
+}
+	
+e1PhyMibPortInfoStatTablePosition OBJECT-TYPE
+	SYNTAX  IpAddress
+	MAX-ACCESS read-only 
+	STATUS mandatory
+	DESCRIPTION
+		"stands for the board position address, this oid contain of rack(1-3),
+		shelf(1-8), slot(1-16), subslot(0-8), display is rack.shel.slot.subslot"
+	::= { e1PhyMibPortInfoStatTableEntry 1 }
+
+e1PhyMibPortInfoStatTablePortGroup OBJECT-TYPE
+	SYNTAX  INTEGER(1..4)
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"the port group number of E1 board, EIPB have 4 port groups, each 2 ports
+		for a group."
+	::= { e1PhyMibPortInfoStatTableEntry 2 }
+
+e1PhyMibPortInfoStatTableSIG64KCHCNT OBJECT-TYPE
+	SYNTAX  Counter32 
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { e1PhyMibPortInfoStatTableEntry 3 }
+
+e1PhyMibPortInfoStatTableSIG64KFRCNT OBJECT-TYPE
+	SYNTAX  Counter32 
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { e1PhyMibPortInfoStatTableEntry 4 }
+
+e1PhyMibPortInfoStatTableSIG2MCHCNT OBJECT-TYPE
+	SYNTAX  Counter32 
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { e1PhyMibPortInfoStatTableEntry 5 }
+
+e1PhyMibPortInfoStatTableSIG2MFRCNT OBJECT-TYPE
+	SYNTAX  Counter32 
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { e1PhyMibPortInfoStatTableEntry 6 }
+
+
+e1PhyMibPortFlowStatTable OBJECT-TYPE
+	SYNTAX SEQUENCE OF e1PhyMibPortFlowStatTableEntry
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"E1 physical layer flow statistic table"
+	::= { e1-phy-module 3 }
+
+e1PhyMibPortFlowStatTableEntry OBJECT-TYPE
+	SYNTAX  e1PhyMibPortFlowStatTableEntry
+	MAX-ACCESS read-only 
+	STATUS mandatory
+	DESCRIPTION
+		"E1 flow statistics table entry"
+	INDEX { 
+		e1PhyMibPortFlowStatPosition,
+		e1PhyMibPortFlowStatPort
+	}
+	::= { e1PhyMibPortFlowStatTable 1 }
+
+e1PhyMibPortFlowStatTableEntry	::= SEQUENCE {
+	e1PhyMibPortFlowStatPosition     IpAddress,
+	e1PhyMibPortFlowStatPort         INTEGER,
+	e1PhyMibPortFlowStatValue        Counter32,
+}
+	
+e1PhyMibPortFlowStatPosition OBJECT-TYPE
+	SYNTAX  IpAddress
+	MAX-ACCESS read-only 
+	STATUS mandatory
+	DESCRIPTION
+		"stands for the board position address, this oid contain of rack(1-3),
+		shelf(1-8), slot(1-16), subslot(0-8), display is rack.shel.slot.subslot"
+	::= { e1PhyMibPortFlowStatTableEntry 1 }
+
+e1PhyMibPortFlowStatPort OBJECT-TYPE
+	SYNTAX  INTEGER(1..4)
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"e1 flow statistics port number, now is only one, Max 4"
+	::= { e1PhyMibPortFlowStatTableEntry 2 }
+
+e1PhyMibPortFlowStatValue OBJECT-TYPE
+	SYNTAX  Counter32
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { e1PhyMibPortFlowStatTableEntry 3 }
+
+
+switchMibPortInfoStatTable OBJECT-TYPE
+	SYNTAX SEQUENCE OF switchMibPortInfoStatTableEntry
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"switch port Status table"
+	::= { switch-module 1 }
+
+switchMibPortInfoStatTableEntry OBJECT-TYPE
+	SYNTAX  switchMibPortInfoStatTableEntry
+	MAX-ACCESS read-only
+	STATUS mandatory
+	DESCRIPTION
+		"switch port status table entry."
+	INDEX { 
+		switchMibPortInfoStatTablePosition,
+		switchMibPortInfoStatTablePort 
+	}
+	::= { switchMibPortInfoStatTable 1 }
+
+switchMibPortInfoStatTableEntry	::= SEQUENCE {
+	switchMibPortInfoStatTablePosition   IpAddress, 
+	switchMibPortInfoStatTablePort       INTEGER, 
+	switchMibPortInfoStatTablePortName   DisplayString, 
+	switchMibPortInfoStatTableLinkState  INTEGER, 
+	switchMibPortInfoStatTableLinkEnable INTEGER,
+	switchMibPortInfoStatTableAutoNeg    INTEGER, 
+	switchMibPortInfoStatTableLinkSpeed  INTEGER,
+	switchMibPortInfoStatTableDuplex     INTEGER 
+}
+
+switchMibPortInfoStatTablePosition OBJECT-TYPE
+	SYNTAX  IpAddress
+	MAX-ACCESS read-only 
+	STATUS mandatory
+	DESCRIPTION
+		"stands for the board position address, this oid contain of rack(1-3),
+		shelf(1-8), slot(1-16), subslot(0-8), display is rack.shel.slot.subslot"
+	::= { switchMibPortInfoStatTableEntry 1 }
+
+switchMibPortInfoStatTablePort OBJECT-TYPE
+	SYNTAX  INTEGER
+	MAX-ACCESS read-only 
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { switchMibPortInfoStatTableEntry 2 }
+
+switchMibPortInfoStatTablePortName OBJECT-TYPE
+	SYNTAX  DisplayString (SIZE (0..64))
+	MAX-ACCESS read-only 
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { switchMibPortInfoStatTableEntry 3 }
+
+switchMibPortInfoStatTableLinkState OBJECT-TYPE
+	SYNTAX  INTEGER { down(0), up(1) }
+	MAX-ACCESS read-only 
+	STATUS mandatory
+	DESCRIPTION
+		"up/down"
+	::= { switchMibPortInfoStatTableEntry 4 }
+
+switchMibPortInfoStatTableLinkEnable OBJECT-TYPE
+	SYNTAX  INTEGER { disable(0), enable(1) }
+	MAX-ACCESS read-write 
+	STATUS mandatory
+	DESCRIPTION
+		"enable/disable"
+	::= { switchMibPortInfoStatTableEntry 5 }
+
+switchMibPortInfoStatTableAutoNeg OBJECT-TYPE
+	SYNTAX  INTEGER { no(0), yes(1) }
+	MAX-ACCESS read-write 
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { switchMibPortInfoStatTableEntry 6 }
+
+switchMibPortInfoStatTableLinkSpeed OBJECT-TYPE
+	SYNTAX  INTEGER { UNKNOWN(0), 
+			10Mbps(1),
+			100Mbps(2),
+			1000Mbps(3),
+			10Gbps(4)
+			}
+	MAX-ACCESS read-only 
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { switchMibPortInfoStatTableEntry 7 }
+
+switchMibPortInfoStatTableDuplex OBJECT-TYPE
+	SYNTAX  INTEGER { 
+					  half(0),
+					  full(1)
+				}
+	MAX-ACCESS read-only 
+	STATUS mandatory
+	DESCRIPTION
+		""
+	::= { switchMibPortInfoStatTableEntry 8 }
+
+
+END
